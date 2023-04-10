@@ -1,18 +1,18 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   get_next_line_utils.c                              :+:      :+:    :+:   */
+/*   get_next_line_utils_bonus.c                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: inchoi <inchoi@student.42Seoul.kr>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/03/27 17:38:35 by inchoi            #+#    #+#             */
-/*   Updated: 2023/04/06 17:39:39 by inchoi           ###   ########.fr       */
+/*   Created: 2023/04/05 11:59:32 by inchoi            #+#    #+#             */
+/*   Updated: 2023/04/06 14:03:27 by inchoi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "get_next_line.h"
+#include "get_next_line_bonus.h"
 
-size_t	ft_strlen(const char *str)
+static size_t	ft_strlen(const char *str)
 {
 	size_t	count;
 
@@ -25,22 +25,6 @@ size_t	ft_strlen(const char *str)
 		str++;
 	}
 	return (count);
-}
-
-char	*ft_strchr(const char *s, int c)
-{
-	size_t	i;
-	size_t	len;
-
-	len = ft_strlen(s);
-	i = 0;
-	while (i < len + 1)
-	{
-		if (*(s + i) == (char) c)
-			return ((char *)(s + i));
-		i++;
-	}
-	return (NULL);
 }
 
 char	*ft_strdup(char *src)
@@ -62,6 +46,22 @@ char	*ft_strdup(char *src)
 	}
 	arr[i] = '\0';
 	return (arr);
+}
+
+char	*ft_strchr(const char *s, int c)
+{
+	size_t	i;
+	size_t	len;
+
+	len = ft_strlen(s);
+	i = 0;
+	while (i < len + 1)
+	{
+		if (*(s + i) == (char) c)
+			return ((char *)(s + i));
+		i++;
+	}
+	return (NULL);
 }
 
 char	*ft_strjoin(char const *s1, char const *s2)

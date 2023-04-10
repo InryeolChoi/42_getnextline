@@ -1,21 +1,23 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   get_next_line.c                                    :+:      :+:    :+:   */
+/*   get_next_line_bonus.c                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: inchoi <inchoi@student.42Seoul.kr>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/03/27 17:38:28 by inchoi            #+#    #+#             */
-/*   Updated: 2023/04/03 14:32:39 by inchoi           ###   ########.fr       */
+/*   Created: 2023/04/05 11:59:23 by inchoi            #+#    #+#             */
+/*   Updated: 2023/04/07 16:38:14 by inchoi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "get_next_line.h"
+#include "get_next_line_bonus.h"
 
-static char	*read_line(int fd, char *buffer, char *backup, int x)
+static char	*read_line(int fd, char *buffer, char **backup)
 {
 	char	*temp;
+	int		x;
 
+	x = 1;
 	while (x)
 	{
 		x = read(fd, buffer, BUFFER_SIZE);
@@ -24,23 +26,23 @@ static char	*read_line(int fd, char *buffer, char *backup, int x)
 		if (x == 0)
 			break ;
 		buffer[x] = '\0';
-		if (backup == NULL)
-			backup = ft_strdup("");
-		temp = backup;
-		backup = ft_strjoin(temp, buffer);
+		temp = backup[fd];
+		backup[fd] = ft_strjoin(backup[fd], buffer);
 		free(temp);
 		if (!backup)
 			return (NULL);
-		if (ft_strchr(backup, '\n'))
+		if (ft_strchr(backup[fd], '\n'))
 			break ;
 	}
-	return (backup);
+	return (backup[fd]);
 }
 
-static char	*sepearate(char *total, int i)
+static char	*sepearate(char *total)
 {
+	int		i;
 	char	*backup;
 
+	i = 0;
 	while (total[i] && total[i] != '\n')
 		i++;
 	if (total[i] == '\0' || total[i + 1] == '\0')
@@ -54,19 +56,19 @@ static char	*sepearate(char *total, int i)
 
 char	*get_next_line(int fd)
 {
-	static char	*backup;
+	static char	*backup[OPEN_MAX];
 	char		buffer[BUFFER_SIZE + 1];
 	char		*total;
 
-	if (fd < 0 || BUFFER_SIZE <= 0)
+	if (fd < 0 || fd >= OPEN_MAX || BUFFER_SIZE <= 0)
 		return (NULL);
-	total = read_line(fd, buffer, backup, 1);
+	total = read_line(fd, buffer, backup);
 	if (total == NULL || *total == '\0')
 	{
-		free(backup);
-		backup = NULL;
+		free(backup[fd]);
+		backup[fd] = (char *) NULL;
 		return (NULL);
 	}
-	backup = sepearate(total, 0);
+	backup[fd] = sepearate(total);
 	return (total);
 }
